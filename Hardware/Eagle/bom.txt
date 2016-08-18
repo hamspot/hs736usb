@@ -1,0 +1,15 @@
+"Part";"Value";"Device";"Package";"Description";"";
+"C1";"22pF";"C-USC1206";"C1206";"CAPACITOR, American symbol";"";
+"C2";"22pF";"C-USC1206";"C1206";"CAPACITOR, American symbol";"";
+"C3";".47µF";"C-USC1206";"C1206";"CAPACITOR, American symbol";"";
+"C4";".1µF";"C-USC1206";"C1206";"CAPACITOR, American symbol";"";
+"GND";"";"3,17/1,3";"3,17/1,3";"THROUGH-HOLE PAD";"";
+"LED1";"";"LED5MM";"LED5MM";"LED";"";
+"LED2";"";"LED5MM";"LED5MM";"LED";"";
+"MINI-USB";"MINI-USB-UX60-MB-5ST";"MINI-USB-UX60-MB-5ST";"UX60-MB-5ST";"MINI USB Connector";"";
+"Q1";"12MHz";"CRYSTALHC49S";"HC49/S";"CRYSTAL";"";
+"R1";"82Ω";"R-US_0204/2V";"0204V";"RESISTOR, American symbol";"";
+"R2";"82Ω";"R-US_0204/2V";"0204V";"RESISTOR, American symbol";"";
+"S-IN";"";"3,17/1,3";"3,17/1,3";"THROUGH-HOLE PAD";"";
+"S-OUT";"";"3,17/1,3";"3,17/1,3";"THROUGH-HOLE PAD";"";
+"U$1";"14K50_DIP";"14K50_DIP";"14K50_DIP";"14K50 20pin dip";"";

@@ -1,3 +1,9 @@
 Hardware/Datasheets
 Drivers/
 Hardware/Eagle/*.?#?
+*.o
+Arduino/test/test_cat_map
+Arduino/firmware/build/
+.arduino/
+*.hex
+*.elf

@@ -15,3 +15,14 @@ The hardware version was developed by Chuck, N6BIL. The source code is GPL licen
 http://home.comcast.net/~tinkyr/736/N6BIL%20Hardware%20Emulator.htm
 
 Ham Spot Inc based the HS-736USB on their great work and thanks them immensely for their hard work on solving a challenging problem! The goal of Ham Spot Inc is that if this interface is popular we will develop similar interfaces for other older rigs which are also not supported by HRD. Specifically in mind are the FT-757GXII, FT-890 and various Icom and Kenwood radios. There will likely be firmware updates to this hardware available on the http://hamspot.com/ website in the future. If you have a PIC programmer the chip has been socketed to allow you to flash new firmware or easily replace the device. If not, there will be made available an inexpensive preprogrammed chip that you can plugin to upgrade the firmware or convert the FT-736USB to another model Yaesu rig as they become supported.
+
+### Arduino / ATmega328P port
+
+An Arduino Uno/Nano port of the CAT translator lives in **[Arduino/](Arduino/)**. It keeps the PIC 847↔736 mapping, adds native-736 passthrough (pin A1 or a CAT opcode), PTT/band GPIO, and an S-meter PWM. The PIC firmware in `Firmware/` is unchanged.
+
+```
+arduino-cli compile --fqbn arduino:avr:nano Arduino/firmware
+cd Arduino && test/run_suite.sh
+```
+
+See `Arduino/README.md`, `Arduino/docs/WIRING.md`, and `Arduino/docs/PROTOCOLS.md`.

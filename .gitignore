@@ -2,8 +2,16 @@ Hardware/Datasheets
 Drivers/
 Hardware/Eagle/*.?#?
 *.o
+__pycache__/
 Arduino/test/test_cat_map
 Arduino/firmware/build/
 .arduino/
+Hardware/tscircuit/node_modules/
+Hardware/tscircuit/.agents/
+Hardware/tscircuit/.claude/
+Hardware/tscircuit/.tscircuit/
+Hardware/tscircuit/dist/index/circuit.json
+Hardware/tscircuit/dist/index/pcb.png
+Hardware/tscircuit/dist/index/schematic.png
 *.hex
 *.elf

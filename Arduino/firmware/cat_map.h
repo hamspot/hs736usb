@@ -64,5 +64,8 @@ uint8_t cat_bcd0_sat_tx(void);
 uint8_t cat_band_from_bcd0(uint8_t b0);
 uint8_t cat_band_mask(void);
 void cat_map_debug_dump(uint8_t out[CAT_DEBUG_LEN]);
+void cat_map_note_smeter(uint8_t raw, bool sql_closed);
+void cat_copy_main(uint8_t out[CAT_BLOCK]);
+void cat_copy_last_radio(uint8_t out[CAT_BLOCK]);
 
 #endif

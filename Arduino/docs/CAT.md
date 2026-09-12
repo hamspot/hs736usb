@@ -23,7 +23,7 @@ Quick reference:
 | `49` / `89` shift (Hamlib) | forward |
 | `0A` CTCSS mode | see PLAN.md; DCS dropped |
 | `0B` tone | `FA` + PIC `Tone[]` |
-| `E7` / `F7` status | cache, not forwarded |
+| `E7` / `F7` status | 847: `E7` is last polled 736 S-meter (`F7`) as 847 RX status; `F7` is TX/PTT cache. 736 mode: forwarded to the radio |
 | `F9` offset | forward |
 
 Radio bytes are spaced **50 ms** apart (FT-736 manual: 50–200 ms per byte).

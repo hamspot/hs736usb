@@ -25,4 +25,4 @@ arduino-cli compile --fqbn arduino:avr:nano Arduino/firmware
 cd Arduino && test/run_suite.sh
 ```
 
-See `Arduino/README.md`, `Arduino/docs/WIRING.md`, and `Arduino/docs/PROTOCOLS.md`.
+See `Arduino/README.md`, `Arduino/docs/WIRING.md`, and `Arduino/docs/PROTOCOLS.md`. Operating manuals for both the PIC cabinet and the Arduino port are in [`Manual/`](Manual/).

@@ -1,0 +1,13 @@
+{
+  "head": {
+    "version": 1,
+    "generator": "tsci"
+  },
+  "project": {
+    "name": "index",
+    "files": {
+      "schematic": "index.kicad_sch",
+      "board": "index.kicad_pcb"
+    }
+  }
+}

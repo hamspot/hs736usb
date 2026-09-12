@@ -14,10 +14,10 @@
 #define GPIO_TX_HOLD_MS 300000u /* 5 minutes */
 
 uint8_t gpio_smeter_pwm(uint8_t raw);
+uint8_t gpio_smeter_dots(uint8_t raw);
+uint8_t gpio_smeter_rx_status(uint8_t raw, bool sql_closed);
 uint16_t gpio_smeter_slew_q8(uint16_t shown_q8, uint8_t target, uint16_t dt_ms,
                              uint16_t window_ms);
 uint32_t gpio_meter_period_ms(uint32_t now_ms, uint32_t last_tx_ms, uint8_t pwm);
-uint8_t gpio_binary_code(uint8_t mask, bool keyed, bool sat,
-                         uint8_t bcd0_main, uint8_t bcd0_rx, uint8_t bcd0_tx);
 
 #endif

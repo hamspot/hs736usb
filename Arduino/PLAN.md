@@ -173,7 +173,7 @@ The 328 has **one** hardware USART. On Uno/Nano that USART is the USB-serial bri
 
 See `docs/WIRING.md` (Arduino, including accessory GPIO) and `docs/CONNECTIONS.md` (every FT-736R jack, with diagrams; CAT/DATA manuals are often wrong). Host settings: **Yaesu FT-847, 4800, 8N2, no handshake**.
 
-Accessory GPIO (not 847 CAT): D2 PTT MOSFET (CAT PTT **or** A0 RCA sense, active low), D4–D7/D10 one-hot bands, D11/D12 2-bit band, D3 S-meter PWM from real 736 `F7` polls. **A1** (PCINT): HIGH = USB speaks FT-847, LOW = native FT-736; IRQ switches immediately without CAT-reset. Native 736 sat opcodes (`0E`/`1E`/`2E`) work only in 736 mode; 847 sat (`4E`/`11`/`21`) works only in 847 mode. See `docs/PROTOCOLS.md`.
+Accessory GPIO (not 847 CAT): D2 PTT MOSFET (CAT PTT **or** A0 RCA sense, active low), D4–D7 one-hot 50/144/220/430, D10 CAT BUSY in, D3 S-meter PWM from real 736 `F7` polls (also cached into host `E7`). D11/D12 + A2–A5: HD44780 16×2. D13 dialect LED. **A1** (PCINT): HIGH = USB speaks FT-847, LOW = native FT-736. See `docs/PROTOCOLS.md` and `docs/WIRING.md`.
 
 ---
 

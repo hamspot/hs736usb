@@ -1,4 +1,5 @@
 #include "cat_map.h"
+#include "gpio_logic.h"
 
 #include <string.h>
 #include <stdbool.h>
@@ -27,6 +28,7 @@ static bool s_sat;
 static volatile cat_proto_t s_proto;
 static volatile cat_proto_t s_jumper;
 static volatile cat_src_t s_src;
+static uint8_t last_radio[CAT_BLOCK];
 
 /* PIC Tone[38]: 847 tone index -> 736 FA code. */
 static const uint8_t k_tone[] PROGMEM = {
@@ -44,6 +46,7 @@ static void emit_radio(cat_result_t *out, const uint8_t *blk)
         return;
     }
     memcpy(out->radio[out->n_radio], blk, CAT_BLOCK);
+    memcpy(last_radio, blk, CAT_BLOCK);
     out->n_radio++;
 }
 
@@ -123,6 +126,7 @@ void cat_map_init(void)
 
     fill_status(rx_status, 0x80, 0xE7);
     fill_status(tx_status, 0x80, 0xF7);
+    memset(last_radio, 0, CAT_BLOCK);
     s_cat_on = false;
     s_ptt = false;
     s_sat = false;
@@ -263,7 +267,6 @@ static void ptt_on(cat_result_t *out, uint8_t *w)
 {
     s_ptt = true;
     emit_radio(out, w);
-    fill_status(rx_status, 0x40, 0xE7);
     fill_status(tx_status, 0x00, 0xF7);
 }
 
@@ -271,7 +274,6 @@ static void ptt_off(cat_result_t *out, uint8_t *w)
 {
     s_ptt = false;
     emit_radio(out, w);
-    fill_status(rx_status, 0x47, 0xE7);
     fill_status(tx_status, 0x80, 0xF7);
 }
 
@@ -545,4 +547,22 @@ void cat_map_dispatch(const uint8_t cmd[CAT_BLOCK], cat_result_t *out)
     } else {
         dispatch_847(w, op, out);
     }
+}
+
+void cat_map_note_smeter(uint8_t raw, bool sql_closed)
+{
+    uint8_t st;
+
+    st = gpio_smeter_rx_status(raw, sql_closed);
+    fill_status(rx_status, st, 0xE7);
+}
+
+void cat_copy_main(uint8_t out[CAT_BLOCK])
+{
+    memcpy(out, freq_main, CAT_BLOCK);
+}
+
+void cat_copy_last_radio(uint8_t out[CAT_BLOCK])
+{
+    memcpy(out, last_radio, CAT_BLOCK);
 }

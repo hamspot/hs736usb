@@ -223,9 +223,16 @@ int main(void)
         expect_n("slew done", gpio_smeter_slew_q8(0, 200, 999, 100) >> 8, 200);
         expect_n("slew hold", gpio_smeter_slew_q8(10 << 8, 10, 5, 100) >> 8, 10);
     }
-    expect_n("bin 144", gpio_binary_code(CAT_BAND_144, false, false, 0x14, 0, 0), 1);
-    expect_n("bin 430", gpio_binary_code(CAT_BAND_430, false, false, 0x43, 0, 0), 2);
-    expect_n("bin 23cm", gpio_binary_code(CAT_BAND_1240, false, false, 0x24, 0, 0), 3);
+    expect_n("dots floor", gpio_smeter_dots(0x30), 0);
+    expect_n("dots ceil", gpio_smeter_dots(0xAD), 31);
+    expect_n("rx sql closed", gpio_smeter_rx_status(0x30, true), 0x80);
+    expect_n("rx sql open", gpio_smeter_rx_status(0xAD, false), 0x1F);
+    cat_map_note_smeter(0xAD, false);
+    cmd[0] = 0; cmd[1] = 0; cmd[2] = 0; cmd[3] = 0; cmd[4] = 0xE7;
+    cat_map_dispatch(cmd, &r);
+    expect_n("E7 n_host", r.n_host, 5);
+    expect_n("E7 meter", r.host[0], 0x1F);
+    expect_n("E7 op", r.host[4], 0xE7);
 
     cmd[0] = CAT_DEBUG_P0;
     cmd[1] = CAT_DEBUG_P1;

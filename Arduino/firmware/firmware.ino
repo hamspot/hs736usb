@@ -11,8 +11,6 @@
 #include "gpio_acc.h"
 #include "proto_pin.h"
 
-static const uint8_t k_led_pin = 13;
-static uint32_t s_led_until_ms;
 static uint8_t s_fwd_expect;
 static uint8_t s_fwd_n;
 static uint8_t s_fwd[5];
@@ -20,9 +18,6 @@ static uint32_t s_fwd_deadline;
 
 void setup()
 {
-    pinMode(k_led_pin, OUTPUT);
-    digitalWrite(k_led_pin, LOW);
-
     Serial.begin(4800, SERIAL_8N2);
     cat_frame_init();
     cat_map_init();
@@ -37,7 +32,6 @@ void loop()
     uint8_t cmd[5];
     cat_result_t result;
     uint8_t i;
-    bool queued;
     int b;
 
     while (Serial.available() > 0) {
@@ -51,10 +45,8 @@ void loop()
             Serial.write(result.host, result.n_host);
         }
 
-        queued = true;
         for (i = 0; i < result.n_radio; i++) {
             if (!radio_uart_queue(result.radio[i])) {
-                queued = false;
                 break;
             }
         }
@@ -63,8 +55,6 @@ void loop()
             s_fwd_n = 0;
             s_fwd_deadline = now + 800;
         }
-        digitalWrite(k_led_pin, HIGH);
-        s_led_until_ms = now + (queued ? 40 : 200);
     }
 
     proto_pin_poll(now);
@@ -90,8 +80,4 @@ void loop()
         gpio_acc_poll(now);
     }
 
-    if (s_led_until_ms != 0 && (int32_t)(now - s_led_until_ms) >= 0 && !radio_uart_busy()) {
-        digitalWrite(k_led_pin, LOW);
-        s_led_until_ms = 0;
-    }
 }

@@ -1,5 +1,4 @@
 #include "gpio_logic.h"
-#include "cat_map.h"
 
 uint8_t gpio_smeter_pwm(uint8_t raw)
 {
@@ -15,6 +14,33 @@ uint8_t gpio_smeter_pwm(uint8_t raw)
     span = (uint16_t)(GPIO_SMETER_RAW_MAX - GPIO_SMETER_RAW_MIN);
     v = (uint16_t)(raw - GPIO_SMETER_RAW_MIN);
     return (uint8_t)((v * 255u) / span);
+}
+
+uint8_t gpio_smeter_dots(uint8_t raw)
+{
+    uint16_t span;
+    uint16_t v;
+
+    if (raw <= GPIO_SMETER_RAW_MIN) {
+        return 0;
+    }
+    if (raw >= GPIO_SMETER_RAW_MAX) {
+        return 31;
+    }
+    span = (uint16_t)(GPIO_SMETER_RAW_MAX - GPIO_SMETER_RAW_MIN);
+    v = (uint16_t)(raw - GPIO_SMETER_RAW_MIN);
+    return (uint8_t)((v * 31u) / span);
+}
+
+uint8_t gpio_smeter_rx_status(uint8_t raw, bool sql_closed)
+{
+    uint8_t b;
+
+    b = gpio_smeter_dots(raw) & 0x1Fu;
+    if (sql_closed) {
+        b = (uint8_t)(b | 0x80u);
+    }
+    return b;
 }
 
 uint16_t gpio_smeter_slew_q8(uint16_t shown_q8, uint8_t target, uint16_t dt_ms,
@@ -70,29 +96,4 @@ uint32_t gpio_meter_period_ms(uint32_t now_ms, uint32_t last_tx_ms, uint8_t pwm)
         }
     }
     return GPIO_POLL_IDLE_MS;
-}
-
-uint8_t gpio_binary_code(uint8_t mask, bool keyed, bool sat,
-                         uint8_t bcd0_main, uint8_t bcd0_rx, uint8_t bcd0_tx)
-{
-    uint8_t primary;
-    uint8_t band;
-
-    if (sat) {
-        primary = keyed ? bcd0_tx : bcd0_rx;
-    } else {
-        primary = bcd0_main;
-    }
-    band = cat_band_from_bcd0(primary);
-    (void)mask;
-    if (band & CAT_BAND_144) {
-        return 1;
-    }
-    if (band & CAT_BAND_430) {
-        return 2;
-    }
-    if (band & CAT_BAND_1240) {
-        return 3;
-    }
-    return 0;
 }

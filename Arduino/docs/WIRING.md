@@ -14,7 +14,7 @@ AMSAT-corrected CAT map. Some Yaesu manuals number these pins wrong.
 | --- | --- | --- |
 | 1 | GND | GND |
 | 2 | Serial In (S.IN) — **into the radio** | **D9** (AltSoftSerial TX) |
-| 3 | Busy | no connect |
+| 3 | Busy | **D10** (LOW = squelch open) |
 | 4 | Serial Out (S.OUT) — **out of the radio** | **D8** (AltSoftSerial RX) |
 | 5 | NC | no connect |
 | 6 | +13.8 V | **do not connect** |
@@ -56,13 +56,17 @@ PTT out, band decode, and S-meter PWM. See `CONNECTIONS.md` for the radio’s ow
 | **D5** | out | One-hot 144 MHz |
 | **D6** | out | One-hot 220 MHz |
 | **D7** | out | One-hot 430 MHz |
-| **D10** | out | One-hot 1240 MHz |
-| **D11** | out | Binary bit 0 (LSB) |
-| **D12** | out | Binary bit 1 |
+| **D10** | in | CAT pin 3 **BUSY**. INPUT_PULLUP; **LOW = squelch open / carrier**. Measure 5 V before wiring. |
+| **D11** | out | HD44780 RS |
+| **D12** | out | HD44780 E (tie RW to GND) |
+| **D13** | out | Dialect LED: HIGH = FT-847, LOW = FT-736 |
 | **A0** | in | Optional PTT **sense** (active LOW) |
 | **A1** | in (PCINT) | Protocol: **HIGH = FT-847**, **LOW = FT-736 native**. Debounced 50 ms. Two stable flips in 1 s restore jumper-follow if CAT had forced a dialect. See `docs/PROTOCOLS.md` |
+| **A2–A5** | out | HD44780 D4–D7 (4-bit data) |
 
-Binary: `00` idle/50/220, `01` 144, `10` 430, `11` 1240. Satellite: one-hot **both** RX and TX bands; binary follows TX while keyed, else sat RX.
+No 2-bit band outputs. 1240 MHz is on the LCD and in CAT (host shows 240 MHz), not a one-hot pin. Satellite: one-hot **both** RX and TX among 50/144/220/430.
+
+16×2 Hitachi: line 1 frequency + mode + 847/736; line 2 last 5 radio bytes (hex) + 5-cell S-meter bar. Host `E7` returns the last polled 736 `F7` mapped to 847 RX status (bits 0–4 dots, bit7 squelch from BUSY).
 
 ### PTT MOSFET (output)
 

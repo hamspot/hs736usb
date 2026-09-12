@@ -54,7 +54,7 @@ TTL, 4800 bit/s, 8 data, no parity, **2 stop bits**. This is the jack HS-736 use
 | --- | --- | --- | --- |
 | 1 | GND | — | Adapter GND |
 | 2 | S.IN / serial data in | **into radio** | Arduino **D9 TX** (idle high TTL) |
-| 3 | Busy | from radio | Unused by this adapter |
+| 3 | Busy | from radio | Adapter **D10**. INPUT_PULLUP; LOW = squelch open / carrier (front-panel BUSY). Measure 5 V first. |
 | 4 | S.OUT / serial data out | **out of radio** | Arduino **D8 RX** |
 | 5 | NC | — | No connect |
 | 6 | +13.8 V | from radio | **Do not** feed the Arduino 5 V pin |

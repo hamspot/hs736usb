@@ -8,13 +8,11 @@ The Yaesu FT-736R remains a popular satellite ground station transceiver.  Howev
 Features not present on the FT-736R are ignored.  Memory channels are not supported and the radio must be set to VFO, also satellite mode must be set to VFO, before enabling CAT control of the radio.  1240 MHz is mapped to 240 MHz because the FT-847 does not have 4 MHz digits.
 
 ### Credits
-The concept for this interface was developed by Dave, KA6BFB in 2010. He developed a proof of concept in software using VB and Windows. It was however quite cumbersome and used 3 virtual serial ports to work with HRD. But an excellent proof of concept nonetheless. This software can be found here:
-[Archives/Software.md](Archives/Software.md)
-(archived from http://home.comcast.net/~tinkyr/736/KA6BFB%20Windows%20Emulator.htm).
+A short history, archived Comcast pages, and the original downloads are in **[Archives/README.md](Archives/README.md)**.
 
-The hardware version was developed by Chuck, N6BIL. The source code is GPL licensed and the Eagle CAD files were published along with the code. The hardware CAD files, source code and binaries can be found here:
-[Archives/Hardware.md](Archives/Hardware.md)
-(archived from http://home.comcast.net/~tinkyr/736/N6BIL%20Hardware%20Emulator.htm).
+The concept was developed by Dave, KA6BFB in 2010 (Windows VB proof of concept, virtual serial ports): [Archives/Software.md](Archives/Software.md).
+
+The hardware version was developed by Chuck, N6BIL (PIC18F14K50, GPL source and Eagle CAD): [Archives/Hardware.md](Archives/Hardware.md).
 
 Ham Spot Inc based the HS-736USB on their great work and thanks them immensely for their hard work on solving a challenging problem! The goal of Ham Spot Inc is that if this interface is popular we will develop similar interfaces for other older rigs which are also not supported by HRD. Specifically in mind are the FT-757GXII, FT-890 and various Icom and Kenwood radios. There will likely be firmware updates to this hardware available on the http://hamspot.com/ website in the future. If you have a PIC programmer the chip has been socketed to allow you to flash new firmware or easily replace the device. If not, there will be made available an inexpensive preprogrammed chip that you can plugin to upgrade the firmware or convert the FT-736USB to another model Yaesu rig as they become supported.
 

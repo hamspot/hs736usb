@@ -57,16 +57,45 @@ PTT out, band decode, and S-meter PWM. See `CONNECTIONS.md` for the radio’s ow
 | **D6** | out | One-hot 220 MHz |
 | **D7** | out | One-hot 430 MHz |
 | **D10** | in | CAT pin 3 **BUSY**. INPUT_PULLUP; **LOW = squelch open / carrier**. Measure 5 V before wiring. |
-| **D11** | out | HD44780 RS |
-| **D12** | out | HD44780 E (tie RW to GND) |
+| **D11** | in | MCP23017 **INTA** (encoder). Unused if `HS736_USE_MCP23017` is 0. |
+| **D12** | — | free |
 | **D13** | out | Dialect LED: HIGH = FT-847, LOW = FT-736 |
 | **A0** | in | Optional PTT **sense** (active LOW) |
 | **A1** | in (PCINT) | Protocol: **HIGH = FT-847**, **LOW = FT-736 native**. Debounced 50 ms. Two stable flips in 1 s restore jumper-follow if CAT had forced a dialect. See `docs/PROTOCOLS.md` |
-| **A2–A5** | out | HD44780 D4–D7 (4-bit data) |
+| **A4, A5** | I2C | SDA / SCL to MCP23017 (LCD + encoder). **A2, A3** free. |
+
+### Optional MCP23017 (`HS736_USE_MCP23017`)
+
+Default **on** in `firmware/hs736_features.h`. The expander drives a **bare 16-pin HD44780** (no backpack) and a KY-040 encoder. To build without the chip (no LCD, no encoder, no I2C):
+
+```
+#define HS736_USE_MCP23017 0
+```
+
+in that header, or:
+
+```
+arduino-cli compile --fqbn arduino:avr:nano \
+  --build-property compiler.cpp.extra_flags=-DHS736_USE_MCP23017=0 \
+  Arduino/firmware
+```
+
+PTT, band D4–D7, PWM, BUSY, dialect LED, A1 jumper, and CAT are unchanged.
+
+| MCP23017 (0x20) | Function |
+| --- | --- |
+| GPA0–GPA3 | HD44780 D4–D7 |
+| GPA4 | RS |
+| GPA5 | E (RW to GND) |
+| GPB0, GPB1, GPB2 | encoder A, B, SW (pull-up, SW active LOW) |
+| INTA | Nano D11 |
+| A0–A2 | GND |
+
+Encoder: one detent = one step. Default **1 kHz** in AM/FM-N/FM-W, **100 Hz** otherwise. Short press: cursor on the displayed freq digits. Long press (~600 ms): AM → FM-N → FM-W → LSB → USB → CW-N → CW-W.
 
 No 2-bit band outputs. 1240 MHz is on the LCD and in CAT (host shows 240 MHz), not a one-hot pin. Satellite: one-hot **both** RX and TX among 50/144/220/430.
 
-16×2 Hitachi: line 1 frequency + mode + 847/736; line 2 last 5 radio bytes (hex) + 5-cell S-meter bar. Host `E7` returns the last polled 736 `F7` mapped to 847 RX status (bits 0–4 dots, bit7 squelch from BUSY).
+16×2 Hitachi (when MCP is enabled): line 1 frequency + mode + 847/736; line 2 last 5 radio bytes (hex) + 5-cell S-meter bar. Host `E7` returns the last polled 736 `F7` mapped to 847 RX status (bits 0–4 dots, bit7 squelch from BUSY).
 
 ### PTT MOSFET (output)
 

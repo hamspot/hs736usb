@@ -28,7 +28,8 @@ def compile_step() -> None:
     src = os.path.join(ROOT, "test", "cat_step.cpp")
     mapper = os.path.join(ROOT, "firmware", "cat_map.cpp")
     gpio = os.path.join(ROOT, "firmware", "gpio_logic.cpp")
-    cmd = ["g++", "-o", STEP_BIN, src, mapper, gpio]
+    enc = os.path.join(ROOT, "firmware", "encoder_logic.cpp")
+    cmd = ["g++", "-o", STEP_BIN, src, mapper, gpio, enc]
     subprocess.check_call(cmd)
 
 

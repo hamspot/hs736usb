@@ -7,7 +7,7 @@ cd "$ROOT"
 # ROOT is the Arduino/ directory (firmware/ and test/ live here).
 
 g++ -o /tmp/test_cat_map \
-    test/test_cat_map.cpp firmware/cat_map.cpp firmware/cat_frame.cpp firmware/gpio_logic.cpp firmware/proto_debounce.cpp
+    test/test_cat_map.cpp firmware/cat_map.cpp firmware/cat_frame.cpp firmware/gpio_logic.cpp firmware/encoder_logic.cpp firmware/proto_debounce.cpp
 /tmp/test_cat_map
 
 if [ -n "$1" ]; then

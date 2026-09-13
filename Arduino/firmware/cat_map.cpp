@@ -1,5 +1,6 @@
 #include "cat_map.h"
 #include "gpio_logic.h"
+#include "encoder_logic.h"
 
 #include <string.h>
 #include <stdbool.h>
@@ -565,4 +566,33 @@ void cat_copy_main(uint8_t out[CAT_BLOCK])
 void cat_copy_last_radio(uint8_t out[CAT_BLOCK])
 {
     memcpy(out, last_radio, CAT_BLOCK);
+}
+
+uint8_t cat_mode_main(void)
+{
+    return freq_main[4];
+}
+
+void cat_map_knob_freq(int8_t dir, uint8_t nibble, cat_result_t *out)
+{
+    uint8_t w[CAT_BLOCK];
+
+    memset(out, 0, sizeof(*out));
+    encoder_add_nibble(freq_main, nibble, dir);
+    memcpy(w, freq_main, 4);
+    w[4] = 0x01;
+    apply_23cm(w);
+    emit_radio(out, w);
+}
+
+void cat_map_knob_mode(cat_result_t *out)
+{
+    uint8_t w[CAT_BLOCK];
+
+    memset(out, 0, sizeof(*out));
+    freq_main[4] = encoder_next_mode(freq_main[4]);
+    memset(w, 0, CAT_BLOCK);
+    w[0] = freq_main[4];
+    w[4] = 0x07;
+    emit_radio(out, w);
 }

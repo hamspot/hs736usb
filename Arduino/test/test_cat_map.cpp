@@ -1,6 +1,7 @@
 #include "../firmware/cat_map.h"
 #include "../firmware/cat_frame.h"
 #include "../firmware/gpio_logic.h"
+#include "../firmware/encoder_logic.h"
 #include "../firmware/proto_debounce.h"
 
 #include <cstdio>
@@ -355,6 +356,53 @@ int main(void)
             g_fail++;
         }
     }
+
+    expect_n("amfm AM", encoder_is_amfm(0x04), 1);
+    expect_n("amfm USB", encoder_is_amfm(0x01), 0);
+    expect_n("nibble AM", encoder_default_nibble(0x04), 5);
+    expect_n("nibble USB", encoder_default_nibble(0x01), 6);
+    expect_n("mode AM->FMN", encoder_next_mode(0x04), 0x88);
+    expect_n("mode CW->AM", encoder_next_mode(0x02), 0x04);
+    expect_n("cursor wrap", encoder_cursor_next(6), 0);
+    {
+        uint8_t bcd[4] = {0x14, 0x50, 0x00, 0x00};
+        encoder_add_nibble(bcd, 5, 1);
+        expect_n("1kHz up b0", bcd[0], 0x14);
+        expect_n("1kHz up b1", bcd[1], 0x50);
+        expect_n("1kHz up b2", bcd[2], 0x01);
+        encoder_add_nibble(bcd, 5, -1);
+        expect_n("1kHz down b2", bcd[2], 0x00);
+    }
+    {
+        uint8_t prev = 0;
+        int8_t s = 0;
+        s += encoder_quad_step(&prev, 1);
+        s += encoder_quad_step(&prev, 3);
+        s += encoder_quad_step(&prev, 2);
+        s += encoder_quad_step(&prev, 0);
+        expect_n("quad cw", s, 4);
+    }
+    {
+        encoder_btn_t st;
+        encoder_btn_init(&st, 1);
+        expect_n("btn idle", encoder_btn_poll(&st, 1, 10), ENC_BTN_NONE);
+        expect_n("btn bounce", encoder_btn_poll(&st, 0, 20), ENC_BTN_NONE);
+        expect_n("btn down", encoder_btn_poll(&st, 0, 60), ENC_BTN_NONE);
+        expect_n("btn up wait", encoder_btn_poll(&st, 1, 100), ENC_BTN_NONE);
+        expect_n("btn short", encoder_btn_poll(&st, 1, 140), ENC_BTN_SHORT);
+        expect_n("btn down2", encoder_btn_poll(&st, 0, 180), ENC_BTN_NONE);
+        expect_n("btn held", encoder_btn_poll(&st, 0, 220), ENC_BTN_NONE);
+        expect_n("btn long", encoder_btn_poll(&st, 0, 900), ENC_BTN_LONG);
+    }
+    cat_map_init();
+    cat_map_knob_freq(1, 5, &r);
+    expect_n("knob n_radio", r.n_radio, 1);
+    expect_n("knob op", r.radio[0][4], 0x01);
+    expect_n("knob 1k", r.radio[0][2], 0x01);
+    cat_map_knob_mode(&r);
+    expect_n("knob mode op", r.radio[0][4], 0x07);
+    expect_n("knob mode FM->LSB", r.radio[0][0], 0x00);
+    expect_n("mode cache", cat_mode_main(), 0x00);
 
     if (g_fail) {
         std::fprintf(stderr, "%d failure(s)\n", g_fail);

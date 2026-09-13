@@ -68,6 +68,8 @@ export default () => (
       pinAttributes={{
         "3V3": { doNotConnect: true },
         AREF: { doNotConnect: true },
+        A2: { doNotConnect: true },
+        A3: { doNotConnect: true },
         A6: { doNotConnect: true },
         A7: { doNotConnect: true },
         VIN: { doNotConnect: true },
@@ -76,10 +78,8 @@ export default () => (
         D13: "net.D13",
         A0: "net.A0",
         A1: "net.A1",
-        A2: "net.A2",
-        A3: "net.A3",
-        A4: "net.A4",
-        A5: "net.A5",
+        A4: "net.SDA",
+        A5: "net.SCL",
         V5: "net.V5",
         RST: "net.RST",
         GND: "net.GND",
@@ -118,12 +118,12 @@ export default () => (
         "TX0",
       ]}
       pinAttributes={{
+        D12: { doNotConnect: true },
         RX0: { doNotConnect: true },
         TX0: { doNotConnect: true },
       }}
       connections={{
-        D12: "net.D12",
-        D11: "net.D11",
+        D11: "net.INTA",
         D10: "net.BUSY",
         D9: "net.SIN",
         D8: "net.SOUT",
@@ -336,13 +336,13 @@ export default () => (
         VSS: "net.GND",
         VDD: "net.V5",
         VO: "net.LCD_VO",
-        RS: "net.D11",
+        RS: "net.LCD_RS",
         RW: "net.GND",
-        E: "net.D12",
-        D4: "net.A2",
-        D5: "net.A3",
-        D6: "net.A4",
-        D7: "net.A5",
+        E: "net.LCD_E",
+        D4: "net.LCD_D4",
+        D5: "net.LCD_D5",
+        D6: "net.LCD_D6",
+        D7: "net.LCD_D7",
         BLA: "net.V5",
         BLK: "net.GND",
       }}
@@ -441,6 +441,135 @@ export default () => (
       pcbRotation={-90}
       pinLabels={["D3", "GND"]}
       connections={{ D3: "net.D3", GND: "net.GND" }}
+    />
+
+    <chip
+      name="U_MCP"
+      footprint="soic28"
+      manufacturerPartNumber="MCP23017"
+      schSectionName="LCD"
+      schX={10}
+      schY={-8}
+      pcbX={14}
+      pcbY={-12}
+      pinLabels={[
+        "GPB0",
+        "GPB1",
+        "GPB2",
+        "GPB3",
+        "GPB4",
+        "GPB5",
+        "GPB6",
+        "GPB7",
+        "VDD",
+        "VSS",
+        "NC1",
+        "SCL",
+        "SDA",
+        "NC2",
+        "ADDR0",
+        "ADDR1",
+        "ADDR2",
+        "RESET",
+        "INTB",
+        "INTA",
+        "GPA0",
+        "GPA1",
+        "GPA2",
+        "GPA3",
+        "GPA4",
+        "GPA5",
+        "GPA6",
+        "GPA7",
+      ]}
+      pinAttributes={{
+        NC1: { doNotConnect: true },
+        NC2: { doNotConnect: true },
+        INTB: { doNotConnect: true },
+        GPB3: { doNotConnect: true },
+        GPB4: { doNotConnect: true },
+        GPB5: { doNotConnect: true },
+        GPB6: { doNotConnect: true },
+        GPB7: { doNotConnect: true },
+        GPA6: { doNotConnect: true },
+        GPA7: { doNotConnect: true },
+      }}
+      connections={{
+        GPB0: "net.ENC_A",
+        GPB1: "net.ENC_B",
+        GPB2: "net.ENC_SW",
+        VDD: "net.V5",
+        VSS: "net.GND",
+        SCL: "net.SCL",
+        SDA: "net.SDA",
+        ADDR0: "net.GND",
+        ADDR1: "net.GND",
+        ADDR2: "net.GND",
+        RESET: "net.V5",
+        INTA: "net.INTA",
+        GPA0: "net.LCD_D4",
+        GPA1: "net.LCD_D5",
+        GPA2: "net.LCD_D6",
+        GPA3: "net.LCD_D7",
+        GPA4: "net.LCD_RS",
+        GPA5: "net.LCD_E",
+      }}
+    />
+    <resistor
+      name="R_SDA"
+      resistance="4.7k"
+      footprint="0805"
+      schSectionName="LCD"
+      schX={8}
+      schY={-6}
+      pcbX={8}
+      pcbY={-12}
+      connections={{ pin1: "net.SDA", pin2: "net.V5" }}
+    />
+    <resistor
+      name="R_SCL"
+      resistance="4.7k"
+      footprint="0805"
+      schSectionName="LCD"
+      schX={8}
+      schY={-5}
+      pcbX={8}
+      pcbY={-14}
+      connections={{ pin1: "net.SCL", pin2: "net.V5" }}
+    />
+    <capacitor
+      name="C_MCP"
+      capacitance="100nF"
+      footprint="0805"
+      schSectionName="LCD"
+      schX={12}
+      schY={-6}
+      pcbX={14}
+      pcbY={-16}
+      connections={{ pin1: "net.V5", pin2: "net.GND" }}
+    />
+    <pinheader
+      name="J_ENC"
+      pinCount={5}
+      gender="male"
+      pitch="2.54mm"
+      showSilkscreenPinLabels={true}
+      obstructsWithinBounds={true}
+      schSectionName="IO"
+      schX={24}
+      schY={-8}
+      schWidth={0.48}
+      pcbX={-22}
+      pcbY={-18}
+      pcbRotation={-90}
+      pinLabels={["V5", "GND", "A", "B", "SW"]}
+      connections={{
+        V5: "net.V5",
+        GND: "net.GND",
+        A: "net.ENC_A",
+        B: "net.ENC_B",
+        SW: "net.ENC_SW",
+      }}
     />
 
   </board>

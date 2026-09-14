@@ -2,7 +2,7 @@
 #include "hs736_features.h"
 
 #include <Arduino.h>
-#if HS736_USE_MCP23017
+#if HS736_USE_MCP
 #include <avr/interrupt.h>
 #include <string.h>
 #include "encoder_logic.h"
@@ -31,9 +31,13 @@ static const uint8_t k_dialect_led = 13;
  * so an unconnected jack reads RX.
  */
 static const uint8_t k_ptt_in = A0;
-#if HS736_USE_MCP23017
-/* MCP23017 INTA. D11 / PB3 / PCINT3. */
+#if HS736_USE_MCP
+/* MCP INT. D11 / PB3 / PCINT3. */
 static const uint8_t k_mcp_int = 11;
+#if HS736_MCP == 8
+/* Shaft switch: 08 has no spare GPIO after LCD+A/B. D12 / PB4 / PCINT4. */
+static const uint8_t k_enc_sw = 12;
+#endif
 #endif
 
 static const uint8_t k_meter_cmd[5] = {0x00, 0x00, 0x00, 0x00, 0xF7};
@@ -54,7 +58,7 @@ static uint16_t s_shown_q8;
 static uint32_t s_slew_last_ms;
 static uint8_t s_rxn;
 static uint8_t s_rxb[5];
-#if HS736_USE_MCP23017
+#if HS736_USE_MCP
 static volatile uint8_t s_enc_irq;
 static uint8_t s_quad_prev;
 static int8_t s_quad_acc;
@@ -129,7 +133,7 @@ static void encoder_service(uint32_t now_ms)
         lcd_ui_set_cursor(ENC_CURSOR_DEFAULT);
     }
 }
-#endif /* HS736_USE_MCP23017 */
+#endif /* HS736_USE_MCP */
 
 static bool hw_ptt_low(void)
 {
@@ -169,9 +173,13 @@ void gpio_acc_begin(void)
     pinMode(k_dialect_led, OUTPUT);
     digitalWrite(k_dialect_led, HIGH);
     pinMode(k_ptt_in, INPUT_PULLUP);
-#if HS736_USE_MCP23017
+#if HS736_USE_MCP
     pinMode(k_mcp_int, INPUT_PULLUP);
     PCMSK0 |= _BV(PCINT3);
+#if HS736_MCP == 8
+    pinMode(k_enc_sw, INPUT_PULLUP);
+    PCMSK0 |= _BV(PCINT4);
+#endif
     PCICR |= _BV(PCIE0);
     lcd_ui_begin();
     s_quad_prev = (uint8_t)(mcp23017_read_b() & 3u);
@@ -215,7 +223,7 @@ void gpio_acc_poll(uint32_t now_ms)
     uint32_t period;
     int b;
 
-#if HS736_USE_MCP23017
+#if HS736_USE_MCP
     encoder_service(now_ms);
     if (s_meter_state == METER_IDLE) {
         flush_pend();

@@ -1,7 +1,7 @@
 #include "lcd_ui.h"
 #include "hs736_features.h"
 
-#if HS736_USE_MCP23017
+#if HS736_USE_MCP
 
 #include "cat_map.h"
 #include "encoder_logic.h"
@@ -204,7 +204,7 @@ void lcd_ui_poll(uint32_t now_ms, uint8_t pwm)
     }
 }
 
-#else /* !HS736_USE_MCP23017 */
+#else /* !HS736_USE_MCP */
 
 void lcd_ui_begin(void) {}
 void lcd_ui_poll(uint32_t now_ms, uint8_t pwm)
